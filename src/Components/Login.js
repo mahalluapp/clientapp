@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getAuth, getRedirectResult, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth"
+import { getAuth,onAuthStateChanged } from "firebase/auth"
 import { useNavigate } from 'react-router-dom';
 import { addUsertoDB, getUserfromDB } from '../Firebase/helper';
 import LoadingModal from './LoadingModal';
@@ -62,77 +62,6 @@ const Login = () => {
         }
        
     },[auth])
-   
-    // useEffect(() => {
-    //     if (status == false) {
-    //         getRedirectResult(auth)
-    //             .then(async (result) => {
-    //                 const user = result.user;
-    //                 const roles = await getUserfromDB(user.uid);
-    //                 console.log(roles)
-    //                 if (!roles) {
-
-    //                     try {
-    //                         await addUsertoDB(user.uid, {
-    //                             username: user.displayName,
-    //                             email: user.email,
-    //                             roles: ["VHJCaVM="],
-
-    //                         })
-    //                         enqueueSnackbar('Signed in Successfull !', {
-    //                             variant: 'success'
-    //                         })
-    //                         try {
-    //                             await expressLogin(user.accessToken)
-    //                         } catch (err) {
-    //                             console.log(err)
-    //                         }
-    //                         navigate('/', { replace: true })
-
-    //                     } catch (err) {
-    //                         enqueueSnackbar('Signing Failed !', {
-    //                             variant: 'error'
-    //                         })
-    //                         navigate('/', { replace: true })
-    //                     } finally {
-    //                         setStatus(true)
-    //                     }
-
-    //                 } else {
-                      
-
-
-
-    //                 }
-
-    //             }).catch((error) => {
-    //                 const email = error?.customData?.email;
-    //                 const credential = GoogleAuthProvider?.credentialFromError(error);
-    //                 if (email || credential) {
-    //                     enqueueSnackbar('Signing Failed !', {
-    //                         variant: 'error'
-    //                     })
-    //                     navigate('/', { replace: true })
-    //                 }
-    //                 if (status == true) {
-    //                     enqueueSnackbar('Signing Failed !', {
-    //                         variant: 'error'
-    //                     })
-    //                     navigate('/', { replace: true })
-    //                 }
-    //                 // console.log('redirect error')
-
-    //             });
-
-    //     } else {
-    //         navigate('/', { replace: true })
-    //     }
-
-
-
-    // }, [status])
-
-
     return <LoadingModal />
 }
 
