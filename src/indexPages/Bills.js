@@ -27,8 +27,8 @@ const Bills = () => {
         if (ledger & date1 !== '',date2 !== '') {
             const details = {
                 ledgerName: ledger,
-                etBilFromDate: date1.format('MM/DD/YYYY'), // mm/dd/yyy for appssript
-                etBilToDate: date2.format('MM/DD/YYYY'),
+                etBilFromDate: date1.format('DD/MM/YYYY'), // mm/dd/yyy for appssript
+                etBilToDate: date2.format('DD/MM/YYYY'),
 
             }
             const res = Object.values(details).every((value) => value !== '')

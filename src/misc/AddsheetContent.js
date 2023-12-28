@@ -83,7 +83,7 @@ const AddsheetContent = () => {
             setIsLoading(true)
 
             try {
-                await addSheetContent({...details, date: date.format('MM/DD/YYYY HH:mm:ss')})
+                await addSheetContent({...details, date: date.format('DD/MM/YYYY HH:mm:ss')})
                 setIsLoading(false)
                 enqueueSnackbar('Data Entered Successfully !', {
                     variant: 'success'
@@ -106,7 +106,6 @@ const AddsheetContent = () => {
         <>
             {isLoading ? <LoadingModal /> : <>  <Box sx={{ width: {sm:'100%', md: '80vw' }, p: 2}}>
                 <Grid container spacing={2} justifyContent='center' alignItems="center">
-
                     <Grid item xs={12} >
                         <Box sx={boxStyle}>
                             <Typography variant='h5' color='rgb(35 120 205)'>{statement} Add Data to Sheet</Typography>

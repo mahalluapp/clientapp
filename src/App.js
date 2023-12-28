@@ -59,7 +59,6 @@ function App() {
               username: user.displayName,
               email: user.email,
               role: [...roles],
-              accessToken: user.accessToken
             }
           })
 

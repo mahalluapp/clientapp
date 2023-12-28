@@ -84,7 +84,7 @@ const IncomeExpense = () => {
         if (res && date) {
             if (statement == 'Income') {
                 setIsLoading(true)
-                const data = await income({...details,etCreditDate: date.format('MM/DD/YYYY HH:mm:ss')})
+                const data = await income({...details,etCreditDate: date.format('DD/MM/YYYY HH:mm:ss')})
                 if (data?.status == "success") {
 
                     setIsLoading(false)
@@ -102,7 +102,7 @@ const IncomeExpense = () => {
 
             } else if (statement == 'Expense') {
                 setIsLoading(true)
-                const data = await expense(details)
+                const data = await expense({...details,etCreditDate: date.format('DD/MM/YYYY HH:mm:ss')})
                 // console.log(data)
                 if (data?.status == "success") {
 

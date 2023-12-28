@@ -49,15 +49,12 @@ const Profile = () => {
         return`${day}/${month}/${year}`;
         
     },[])
-
-
     return (
         <>
             {
                 isLoading ? <> <LoadingModal /></> : <>
-
                     <Box sx={{ flexGrow: 1, minWidth: '100vw', maxWidth: '100vw' }}>
-                        <Grid container spacing={2} >
+                       <Grid container spacing={2} >
                             <Grid item xs={12} md={6}>
                                 <Item>
                                     <Grid container spacing={1}>
@@ -195,7 +192,7 @@ const Profile = () => {
                                         </Grid>
                                         <Grid item xs={6}>
                                             <Typography variant='body1' sx={{color:'black'}}>
-                                                {data?.map((el) => dayjs(el.payindate).format('DD/MM/YYYY'))}
+                                                {data?.map((el) => el.payindate)}
                                             </Typography>
                                         </Grid>
                                     </Grid>

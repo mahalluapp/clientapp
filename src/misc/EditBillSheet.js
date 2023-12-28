@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useLocation } from 'react-router-dom';
-import { LinearProgress, Typography } from '@mui/material';
+import { Grid, LinearProgress, Typography } from '@mui/material';
 import useSWR from 'swr';
 import { DataGrid, GridActionsCellItem, GridRowModes, GridRowEditStopReasons, GridToolbarContainer, GridToolbarQuickFilter, GridCellEditStopReasons } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
@@ -15,11 +15,9 @@ import EditTextarea from '../indexPages/EditTextarea';
 import { updateMisc, viewSheet } from '../swrApi/miscApi';
 import dayjs from 'dayjs';
 import LoadingModal from '../Components/LoadingModal';
-
 function isKeyboardEvent(event) {
   return !!event.key;
 }
-
 const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   border: 0,
   color:
@@ -61,8 +59,14 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   },
 
 }));
-
-const Editsheet = () => {
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
+const EditBillSheet = () => {
   const location = useLocation()
   const [rows, setRows] = React.useState([]);
   const [rowModesModel, setRowModesModel] = React.useState({});
@@ -72,17 +76,18 @@ const Editsheet = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = React.useState(false)
   const columns = [
-    { field: 'date', headerName: 'Date', width: 130, editable: true, type: 'dateTime', },
+    {
+      field: 'date', headerName: 'Date', width: 130, editable: true, type: 'dateTime', valueFormatter: params =>
+        dayjs(params?.value).format("DD/MM/YYYY HH:mm:ss")
+    },
     { field: 'particulars', headerName: 'Statement', minWidth: 400, editable: true, type: 'string', renderEditCell: (params) => <EditTextarea  {...params} /> },
     {
       field: 'debit', headerName: 'Debit', width: 130,
-      // valueGetter: (params) => params.row.type == 'Debit'? params.row.amount : '', 
       editable: true, type: 'number'
 
     },
     {
       field: 'credit', headerName: 'Credit', width: 130,
-      // valueGetter: (params) => params.row.type == 'Credit' ? params.row.amount :'',
       editable: true, type: 'number'
     },
     { field: 'billno', headerName: 'Bill No', minWidth: 130, editable: true },
@@ -128,13 +133,11 @@ const Editsheet = () => {
         ];
       },
     },
-
-
   ];
+
   React.useEffect(() => {
     const arr = [];
     data?.items?.forEach((item, i) => {
-      // const date = dayjs(item.date).format("DD/MM/YYYY")
       let debit;
       let credit;
       if (item.type == 'Debit') {
@@ -142,24 +145,19 @@ const Editsheet = () => {
       } else if (item.type == 'Credit') {
         credit = item.amount
       }
-      const newdat = new Date(item.date)
+      const parsedDate = dayjs(item.date, 'DD/MM/YYYY HH:mm:ss');
+      const formattedDate = parsedDate.format('YYYY-MM-DDTHH:mm:ss');
+      const newdat = new Date(formattedDate)
       arr.push({ debit, credit, date: newdat, particulars: item.particulars, billno: item.billno, id: item.id })
 
     })
     setRows(arr)
-  }, [data])
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
+  }, [data]);
   const processRowUpdate = async (newRow, oldRow) => {
     const ledgerName = location.state;
     // console.log(newRow)
     if (!isNaN(newRow.debit) && !isNaN(newRow.credit) && (newRow.debit === 0 || newRow.credit === 0) && !(newRow.debit > 0 && newRow.credit > 0)) {
-      const formDate = dayjs(newRow.date).format('MM/DD/YYYY HH:MM:ss');
+      const formDate = dayjs(newRow.date).format('DD/MM/YYYY HH:mm:ss');
       try {
         setLoading(true);
         const resp = await updateMisc({ ...newRow, ledgerName, date: formDate })
@@ -238,65 +236,61 @@ const Editsheet = () => {
       </GridToolbarContainer>
     );
   }
+  if (loading) return <LoadingModal />
   const pageSize = [10, 20, 40, 80, 100]
-  const handleTest = () => {
-    console.log(location)
-  }
-  if(loading) return <LoadingModal/>
   return (
     <>  {error ? <> <Typography variant='h5'>Not Found</Typography> </> :
-      <Box sx={{ width: {sx:'100%'} }}>       
+      <Grid container sx={{ width: { sx: '100%', md: '90vw', lg: '80vw', xl: '70vw' } }}>
+
+        <Box sx={{ width: { xs: '100%', m: 'auto' } }}>
           <Stack spacing={2}>
             <Item><Typography>Opening Balance : {data?.balance?.openbal}</Typography></Item>
             <Item>
-            <StyledDataGrid
-              rows={rows}
-              columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 10 },
-                },
-                //page: 0, pageSize: 10 [5, 10]
-              }}
-              pageSizeOptions={pageSize}
+              <StyledDataGrid
+                rows={rows}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: { page: 0, pageSize: 10 },
+                  },
+                }}
+                pageSizeOptions={pageSize}
 
-              editMode="row"
-              getRowHeight={() => 'auto'}
-              getRowSpacing={() => 'auto'}
-              slots={{ noRowsOverlay: LinearProgress, toolbar: CustomToolbar, loadingOverlay: LinearProgress, }}
-              loading={isLoading}
-              rowModesModel={rowModesModel}
-              onRowModesModelChange={handleRowModesModelChange}
-              onRowEditStop={handleRowEditStop}
-              processRowUpdate={processRowUpdate}
-              onCellDoubleClick={(params, event) => {
-                if (!event.ctrlKey) {
-                  event.defaultMuiPrevented = true;
-                }
-              }}
-              onProcessRowUpdateError={handleProcessRowUpdateError}
-              onCellEditStop={(params, event) => {
-                if (params.reason !== GridCellEditStopReasons.enterKeyDown) {
-                  return;
-                }
-                if (isKeyboardEvent(event) && !event.ctrlKey && !event.metaKey) {
-                  event.defaultMuiPrevented = true;
-                }
-              }}
-            />
+                editMode="row"
+                getRowHeight={() => 'auto'}
+                getRowSpacing={() => 'auto'}
+                slots={{ noRowsOverlay: LinearProgress, toolbar: CustomToolbar, loadingOverlay: LinearProgress, }}
+                loading={isLoading}
+                rowModesModel={rowModesModel}
+                onRowModesModelChange={handleRowModesModelChange}
+                onRowEditStop={handleRowEditStop}
+                processRowUpdate={processRowUpdate}
+                onCellDoubleClick={(params, event) => {
+                  if (!event.ctrlKey) {
+                    event.defaultMuiPrevented = true;
+                  }
+                }}
+                onProcessRowUpdateError={handleProcessRowUpdateError}
+                onCellEditStop={(params, event) => {
+                  if (params.reason !== GridCellEditStopReasons.enterKeyDown) {
+                    return;
+                  }
+                  if (isKeyboardEvent(event) && !event.ctrlKey && !event.metaKey) {
+                    event.defaultMuiPrevented = true;
+                  }
+                }}
+              />
             </Item>
             <Item><Typography>Closing Balance : {data?.balance?.closebal}</Typography></Item>
 
           </Stack>
-      </Box>
+        </Box>
+      </Grid >
 
     }
-
-
-
-
     </>
   )
-}
 
-export default Editsheet
+
+};
+export default EditBillSheet

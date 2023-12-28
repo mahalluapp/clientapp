@@ -76,7 +76,7 @@ const Viewsheet = () => {
     let creditT = 0;
     data?.items?.forEach((item, i) => {
 
-      const date = dayjs(item.date).format("DD/MM/YYYY HH:MM:ss")
+      const date = dayjs(item.date,'DD/MM/YYYY HH:MM:ss').format("DD/MM/YYYY HH:MM:ss")
       if (item.type == 'Debit') debitT += item.amount;
       if (item.type == 'Credit') creditT += item.amount;
 

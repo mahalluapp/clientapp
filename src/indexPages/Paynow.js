@@ -88,11 +88,11 @@ const Paynow = () => {
         const res = Object.values(details).every((value) => value !== '');
         if (res) {
             setIsloading(true)
-            const NewFromDueDate1 = dayjs(details.NewFromDueDate1, 'MM/DD/YYYY').format('DD/MM/YYYY')
-            const NewFromDueDate2 = dayjs(details.NewFromDueDate2, 'MM/DD/YYYY').format('DD/MM/YYYY')
+            // const NewFromDueDate1 = dayjs(details.NewFromDueDate1, 'MM/DD/YYYY').format('DD/MM/YYYY')
+            // const NewFromDueDate2 = dayjs(details.NewFromDueDate2, 'MM/DD/YYYY').format('DD/MM/YYYY')
 
             try {
-                const resp = await confirmPay({ ...details, NewFromDueDate1, NewFromDueDate2 })
+                const resp = await confirmPay({ ...details })
                 // console.log(resp)
                 if (resp.status == 'success') {
                     const successAction = snackbarId => (
@@ -148,10 +148,16 @@ const Paynow = () => {
             enqueueSnackbar('Please fill in all Details ', { variant: 'warning' })
         }
     }
+    // const handleTest = () =>{
+    //     console.log(details)
+
+    // }
     return (
         <>  {loading ? <LoadingModal /> :
 
             <Box sx={{ flexGrow: 1, minWidth: '100vw', maxWidth: '100vw' }}>
+                                    {/* <Button onClick={handleTest}>TEST</Button> */}
+
                 <Grid container spacing={2} justifyContent='center' alignItems='center'>
                     <Grid item xs={12}>
                         <Item>

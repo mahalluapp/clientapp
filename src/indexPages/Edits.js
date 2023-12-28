@@ -27,8 +27,8 @@ const Edit = () => {
         if (ledger & date1 !== '',date2 !== '') {
             const details = {
                 ledgerName: ledger,
-                etBilFromDate: date1.format('MM/DD/YYYY'),
-                etBilToDate: date2.format('MM/DD/YYYY'),
+                etBilFromDate: date1.format('DD/MM/YYYY'),
+                etBilToDate: date2.format('DD/MM/YYYY'),
 
             }
             // console.log(details)

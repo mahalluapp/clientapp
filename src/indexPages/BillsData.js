@@ -77,7 +77,7 @@ const BillsData = () => {
         let creditT = 0;
         billData?.items?.forEach((item, i) => {
 
-            const date = dayjs(item.date).format("DD/MM/YYYY")
+            const date = dayjs(item.date,'DD/MM/YYYY HH:mm:ss').format("DD/MM/YYYY")
             if (item.type == 'Debit') debitT += item.amount;
             if (item.type == 'Credit') creditT += item.amount;
 

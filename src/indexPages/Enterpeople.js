@@ -110,8 +110,8 @@ const Enterpeople = () => {
         
         setDetails((prev) => {
           return {
-            ...prev, etDueDateRate1: date1.format('MM/DD/YYYY'),
-            etDueDateRate2: date2.format('MM/DD/YYYY')
+            ...prev, etDueDateRate1: date1.format('DD/MM/YYYY'),
+            etDueDateRate2: date2.format('DD/MM/YYYY')
           }
         })
       }

@@ -4,14 +4,13 @@ import AdminPanel from './AdminPanel';
 import Admin from './Admin';
 import Users from './Users';
 import PrivateAdmin from './PrivateAdmin';
-import Bills from '../indexPages/Bills';
-import EditData from '../indexPages/EditData';
-import Editsheet from '../misc/Editsheet';
 import ListsSheets from '../misc/ListsSheets';
 import Edit from '../indexPages/Edits';
 import Extras from './Extras';
 import DeleteSheet from '../misc/DeleteSheet';
 import DeleteCert from '../Certificate/DeleteCert';
+import BillEdit from '../indexPages/BillEdit';
+import EditBillSheet from '../misc/EditBillSheet';
 
 const AdminLayout = () => {
     return (
@@ -24,11 +23,11 @@ const AdminLayout = () => {
                     <Route index element={<Extras />} />
                     <Route path='editledger' element={<Outlet />}>
                         <Route index element={<Edit />} />
-                        <Route path='edit' element={<EditData />} />
+                        <Route path='edit' element={<BillEdit />} />
                     </Route>
                     <Route path='editmiscsheet' element={<Outlet />}>
                         <Route index element={<ListsSheets />} />
-                        <Route path='edit' element={<Editsheet />} />
+                        <Route path='edit' element={<EditBillSheet />} />
                     </Route>
                     <Route path='deletemiscsheet' element={<Outlet />}>
                         <Route index element={<ListsSheets />} />

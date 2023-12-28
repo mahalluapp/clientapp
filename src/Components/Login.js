@@ -5,13 +5,14 @@ import { addUsertoDB, getUserfromDB } from '../Firebase/helper';
 import LoadingModal from './LoadingModal';
 import { useSnackbar } from 'notistack'
 import { expressLogin } from '../swrApi/helperApis';
-
+import { useContext } from 'react';
+import { AuthContext } from '../Pages/AuthContexProvider';
 const Login = () => {
     const auth = getAuth();
     const [status, setStatus] = useState(false)
     const navigate = useNavigate()
     const { enqueueSnackbar } = useSnackbar();
-
+    const { user, setUser } = useContext(AuthContext)
     useEffect(()=>{
         if(status == false){
             onAuthStateChanged(auth, async (user) => {
@@ -23,6 +24,14 @@ const Login = () => {
                             enqueueSnackbar('you are logged in successfully !', {
                                 variant: 'success'
                             })
+                            setUser((prev) => {
+                                return {
+                                  ...prev,
+                                  username: user.displayName,
+                                  email: user.email,
+                                  role: [...roles],
+                                }
+                              })
                         } catch (err) {
                             enqueueSnackbar('Server Error !', {
                                 variant: 'error'
@@ -44,6 +53,14 @@ const Login = () => {
                             enqueueSnackbar('Signed in Successfull !', {
                                 variant: 'success'
                             })
+                            setUser((prev) => {
+                                return {
+                                  ...prev,
+                                  username: user.displayName,
+                                  email: user.email,
+                                  role: [...roles],
+                                }
+                              })
                             navigate('/', { replace: true })
         
                         } catch (err) {

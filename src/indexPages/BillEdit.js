@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useLocation } from 'react-router-dom';
-import { Button, Container, LinearProgress, Typography } from '@mui/material';
+import { Button, Container, Grid, LinearProgress, Typography } from '@mui/material';
 import useSWR from 'swr';
 import { generateBill } from '../swrApi/helperApis';
 import { DataGrid, GridActionsCellItem, GridRowModes, GridRowEditStopReasons, GridToolbarContainer, GridToolbarQuickFilter, GridCellEditStopReasons } from '@mui/x-data-grid';
@@ -20,7 +20,6 @@ import LoadingModal from '../Components/LoadingModal';
 function isKeyboardEvent(event) {
     return !!event.key;
 }
-
 const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     border: 0,
     color:
@@ -62,7 +61,15 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     },
 
 }));
-const EditData = () => {
+
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+}));
+const BillEdit = () => {
     const location = useLocation()
     const [rows, setRows] = React.useState([]);
     const [rowModesModel, setRowModesModel] = React.useState({});
@@ -72,7 +79,8 @@ const EditData = () => {
     const [loading, setLoading] = React.useState(false)
     const { enqueueSnackbar } = useSnackbar()
     const columns = [
-        { field: 'date', headerName: 'Date', width: 130, editable: true, type: 'dateTime', },
+        { field: 'date', headerName: 'Date', width: 130, editable: true, type: 'dateTime', valueFormatter: params => 
+        dayjs(params?.value).format("DD/MM/YYYY HH:mm:ss")},
         { field: 'particulars', headerName: 'Statement', minWidth: 400, editable: true, type: 'string', renderEditCell: (params) => <EditTextarea  {...params} /> },
         {
             field: 'debit', headerName: 'Debit', width: 130,
@@ -137,12 +145,14 @@ const EditData = () => {
             // const date = dayjs(item.date).format("DD/MM/YYYY")
             let debit;
             let credit;
-            if (item.type == 'Debit') {
+            if (item.type === 'Debit') {
                 debit = item.amount;
-            } else if (item.type == 'Credit') {
+            } else if (item.type === 'Credit') {
                 credit = item.amount
             }
-            const newdat = new Date(item.date)
+            const parsedDate = dayjs(item.date,'DD/MM/YYYY HH:mm:ss');
+            const formattedDate = parsedDate.format('YYYY-MM-DDTHH:mm:ss');
+            const newdat = new Date(formattedDate)
             arr.push({ debit, credit, date: newdat, particulars: item.particulars, billno: item.billno, id: item.id })
 
         })
@@ -150,20 +160,12 @@ const EditData = () => {
 
         setRows(arr)
     }, [billData])
-
-    const Item = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-        ...theme.typography.body2,
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-    }));
     const processRowUpdate = async (newRow, oldRow) => {
         const ledgerName = location.state.details.ledgerName
 
         if (!isNaN(newRow.debit) && !isNaN(newRow.credit) && (newRow.debit === 0 || newRow.credit === 0) && !(newRow.debit > 0 && newRow.credit > 0)) {
             try {
-                const formDate = dayjs(newRow.date).format('MM/DD/YYYY HH:MM:ss');
+                const formDate = dayjs(newRow.date).format('DD/MM/YYYY HH:mm:ss');
                 setLoading(true);
                 const resp = await updateSheet({ ...newRow, ledgerName, date: formDate })
                 if (resp == 200) {
@@ -212,11 +214,6 @@ const EditData = () => {
     const handleSaveClick = (id) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
     };
-
-    const handleDeleteClick = (id) => () => {
-        setRows(rows.filter((row) => row.id !== id));
-    };
-
     const handleCancelClick = (id) => () => {
         setRowModesModel({
             ...rowModesModel,
@@ -233,7 +230,6 @@ const EditData = () => {
         console.log(error)
     }, []);
 
-
     function CustomToolbar() {
         return (
             <GridToolbarContainer>
@@ -248,66 +244,64 @@ const EditData = () => {
             </GridToolbarContainer>
         );
     }
-
     const pageSize = [10, 20, 40, 80, 100]
-    if (loading) return <LoadingModal />
-    return (
-        <>  {error ? <> <Typography variant='h5'>Not Found</Typography> </> :
-            <Container sx={{ width: { sx: '100%', md: '70vw' } }}>
-                <Box sx={{ width: '100%', m: 'auto' }}>
-                    <Stack spacing={2}>
-                        <Item><Typography>Opening Balance : {billData?.balance?.openbal}</Typography></Item>
-                        <Item>
-                        <StyledDataGrid
-                            rows={rows}
-                            columns={columns}
-                            initialState={{
-                                pagination: {
-                                    paginationModel: { page: 0, pageSize: 10 },
-                                },
-                                //page: 0, pageSize: 10 [5, 10]
-                            }}
-                            pageSizeOptions={pageSize}
+if(loading) return <LoadingModal/>
+  return (
+    <>  {error ? <> <Typography variant='h5'>Not Found</Typography> </> :
+    <Grid container  sx={{ width: {sx:'100%',md:'90vw', lg: '80vw',xl:'70vw'} }}>
+            <Box sx={{ width: '100%', m: 'auto' }}>
+                <Stack spacing={2}>
+                    <Item><Typography>Opening Balance : {billData?.balance?.openbal}</Typography></Item>
+                    <Item>
+                    <StyledDataGrid
+                        rows={rows}
+                        columns={columns}
+                        initialState={{
+                            pagination: {
+                                paginationModel: { page: 0, pageSize: 10 },
+                            },
+                        }}
+                        pageSizeOptions={pageSize}
 
-                            editMode="row"
-                            getRowHeight={() => 'auto'}
-                            getRowSpacing={() => 'auto'}
-                            slots={{ noRowsOverlay: LinearProgress, toolbar: CustomToolbar, loadingOverlay: LinearProgress, }}
-                            loading={isLoading}
-                            rowModesModel={rowModesModel}
-                            onRowModesModelChange={handleRowModesModelChange}
-                            onRowEditStop={handleRowEditStop}
-                            processRowUpdate={processRowUpdate}
-                            onCellDoubleClick={(params, event) => {
-                                if (!event.ctrlKey) {
-                                    event.defaultMuiPrevented = true;
-                                }
-                            }}
-                            onProcessRowUpdateError={handleProcessRowUpdateError}
-                            onCellEditStop={(params, event) => {
-                                if (params.reason !== GridCellEditStopReasons.enterKeyDown) {
-                                    return;
-                                }
-                                if (isKeyboardEvent(event) && !event.ctrlKey && !event.metaKey) {
-                                    event.defaultMuiPrevented = true;
-                                }
-                            }}
-                        
-                        />
-                        </Item>
-                        <Item><Typography>Closing Balance : {billData?.balance?.closebal}</Typography></Item>
+                        editMode="row"
+                        getRowHeight={() => 'auto'}
+                        getRowSpacing={() => 'auto'}
+                        slots={{ noRowsOverlay: LinearProgress, toolbar: CustomToolbar, loadingOverlay: LinearProgress, }}
+                        loading={isLoading}
+                        rowModesModel={rowModesModel}
+                        onRowModesModelChange={handleRowModesModelChange}
+                        onRowEditStop={handleRowEditStop}
+                        processRowUpdate={processRowUpdate}
+                        onCellDoubleClick={(params, event) => {
+                            if (!event.ctrlKey) {
+                                event.defaultMuiPrevented = true;
+                            }
+                        }}
+                        onProcessRowUpdateError={handleProcessRowUpdateError}
+                        onCellEditStop={(params, event) => {
+                            if (params.reason !== GridCellEditStopReasons.enterKeyDown) {
+                                return;
+                            }
+                            if (isKeyboardEvent(event) && !event.ctrlKey && !event.metaKey) {
+                                event.defaultMuiPrevented = true;
+                            }
+                        }}
+                    
+                    />
+                    </Item>
+                    <Item><Typography>Closing Balance : {billData?.balance?.closebal}</Typography></Item>
 
-                    </Stack>
-                </Box>
-            </Container>
+                </Stack>
+            </Box>
+        </Grid >
 
-        }
-
+    }
 
 
 
-        </>
-    )
+
+    </>
+  )
 }
 
-export default EditData
+export default BillEdit
