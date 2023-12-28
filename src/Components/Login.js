@@ -58,7 +58,7 @@ const Login = () => {
                                   ...prev,
                                   username: user.displayName,
                                   email: user.email,
-                                  role: [...roles],
+                                  role: ["VHJCaVM="],
                                 }
                               })
                             navigate('/', { replace: true })
