@@ -123,7 +123,7 @@ const Viewsheet = () => {
   return (
     <>  {error ? <> <Typography variant='h5'>Not Found</Typography> </> :
     
-        <Grid  sx={{ width: { xs: '100vw', md: '90vw', lg: '70vw',xl:'60vw'} }}>
+        <Grid container sx={{ width: { xs: '100vw', md: '90vw', lg: '70vw',xl:'60vw'} }}>
           <Box sx={{ width: '100%', mx: 'auto',mb:2 }}>
             <Stack spacing={2}>
               <Item><Typography>Opening Balance : {data?.balance?.openbal}</Typography></Item>

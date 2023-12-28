@@ -162,13 +162,15 @@ const Generate = () => {
     return (
         <>
             {isLoading ? <LoadingModal /> : bloburl ?
-
-                    <Box sx={{ width:'100vw',height:'70vh'}}>
+                <Grid container sx={{ width:'100vw',height:'80vh'}}>
+                       <Box sx={{ width:'100%',height:'70vh'}}>
                         <Viewer fileUrl={bloburl} />
                         <Button onClick={handleDownload} variant='contained' sx={{ m: 2 }}>Download</Button>
                         <Button onClick={handleSave} variant='contained' sx={{ m: 2 }}>Save Pdf</Button>
                     </Box>
 
+                </Grid>
+                 
                 : <>  <Box sx={{ width: { xs: '100%', md: '60vw' } }} >
                     <Grid container spacing={2} justifyContent='center' alignItems="center">
 

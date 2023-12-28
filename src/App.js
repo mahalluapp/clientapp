@@ -65,8 +65,6 @@ function App() {
 
         }
 
-      } else {
-        console.log('loggedout')
       }
     });
   }, [setUser])

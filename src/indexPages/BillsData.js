@@ -43,7 +43,7 @@ const BillsData = () => {
         if (isXs) {
           return 110;
         } else if (isSm) {
-          return 120;
+          return 150;
         } else {
           return 180;
         }
@@ -131,7 +131,7 @@ const BillsData = () => {
 
     return (
         <>  {error ? <> <Typography variant='h5'>Not Found</Typography> </> :
-            <Grid sx={{ width: {sx:'100%',md:'70vw', lg: '70vw',xl:'60vw'} }}>
+            <Grid container sx={{ width: {sx:'100%',md:'70vw', lg: '70vw',xl:'60vw'} }}>
                 <Box sx={{ width: '100%', mx: 'auto',mb:2 }}>
                     <Stack spacing={2}>
                         <Item><Typography>Opening Balance : {billData?.balance?.openbal}</Typography></Item>
