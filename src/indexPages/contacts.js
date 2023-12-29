@@ -65,6 +65,7 @@ const Contacts = ({ users, isLoading }) => {
     }, [users, search])
     return (
         <>
+
             <Box sx={{ width: '100%' }}>
                 {/* <button onClick={handleTest}>TEST</button> */}
                 <Item sx={{
@@ -85,9 +86,7 @@ const Contacts = ({ users, isLoading }) => {
                         </Stack>
                     </Stack>
                 </Item>
-
-            </Box>
-            <Item
+                <Item
                 sx={{
                     my: 1,
                     mx: 'auto',
@@ -122,6 +121,8 @@ const Contacts = ({ users, isLoading }) => {
 
                 }
             </Item>
+            </Box>
+            
 
         </>
 

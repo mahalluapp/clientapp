@@ -67,11 +67,7 @@ const Payment = () => {
                     
 
                 </Grid>
-                <Grid item xs={12} md={6} lg={3} container direction="row"
-                justifyContent="center"
-                alignItems="center">
-                    
-                </Grid>
+
             </Grid>
         </Box>
     )

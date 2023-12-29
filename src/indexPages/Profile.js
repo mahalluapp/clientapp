@@ -10,9 +10,8 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import LoadingModal from '../Components/LoadingModal'
 import { AuthContext } from '../Pages/AuthContexProvider'
-import dayjs from 'dayjs'
 const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    backgroundColor: '#fff',
     ...theme.typography.body2,
     padding: theme.spacing(1),
     textAlign: 'center',
@@ -53,7 +52,7 @@ const Profile = () => {
         <>
             {
                 isLoading ? <> <LoadingModal /></> : <>
-                    <Box sx={{ flexGrow: 1, minWidth: '100vw', maxWidth: '100vw' }}>
+                    <Box sx={{ flexGrow: 1, maxWidth: {xs:'98vw',md:'95vw'} }}>
                        <Grid container spacing={2} >
                             <Grid item xs={12} md={6}>
                                 <Item>
