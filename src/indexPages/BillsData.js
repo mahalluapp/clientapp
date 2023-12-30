@@ -89,9 +89,9 @@ const BillsData = () => {
         })
         // arr.push({ date: '--', particulars: `--`, debitT: '--', creditT: '--', id: arr.length + 2})
         arr.push({ date: '', particulars: ``, debitT: '', creditT: '', id: arr.length + 100, flag: true })
-        arr.push({ date: '', particulars: ``, debitT: 'TOTAL', creditT: 'TOTAL', id: arr.length + 101, flag: true })
-        arr.push({ date: ``, debitT, creditT, particulars: `Opening Balance : ${billData?.balance?.openbal} Closing Balance :${billData?.balance?.closebal}`, id: arr.length + 102, flag: true })
-        arr.push({ date: '--', particulars: `--`, debitT: '--', creditT: '--', id: arr.length + 103 })
+        arr.push({ date: '', particulars: `Total`, debitT:`${debitT} Rs`, creditT:`${creditT} Rs`, id: arr.length + 101, flag: true })
+        arr.push({ date: ``, debitT:"--", creditT :"--", particulars: `Opening Balance : ${billData?.balance?.openbal} Rs`, id: arr.length + 102, flag: true })
+        arr.push({ date: '--', particulars: `Closing Balance :${billData?.balance?.closebal} Rs`, debitT: '--', creditT: '--', id: arr.length + 103 })
         arr.push({ date: '--', particulars: `--`, debitT: '--', creditT: '--', id: arr.length + 104 })
 
         setRows(arr)
@@ -134,7 +134,7 @@ const BillsData = () => {
             <Grid container sx={{ width: {sx:'100%',md:'70vw', lg: '70vw',xl:'60vw'} }}>
                 <Box sx={{ width: '100%', mx: 'auto',mb:2 }}>
                     <Stack spacing={2}>
-                        <Item><Typography>Opening Balance : {billData?.balance?.openbal}</Typography></Item>
+                        <Item><Typography>Opening Balance : {billData?.balance?.openbal} Rs</Typography></Item>
                         <Item>
                         <DataGrid
                             rows={rows}
@@ -152,7 +152,7 @@ const BillsData = () => {
                             sx = {{fontSize:15}}
                         />
                         </Item>
-                        <Item><Typography>Closing Balance : {billData?.balance?.closebal}</Typography></Item>
+                        <Item><Typography>Closing Balance : {billData?.balance?.closebal} Rs</Typography></Item>
 
                     </Stack>
 

@@ -7,7 +7,7 @@ import { auth } from '../Firebase/firebase';
 const baseURLProd = 'https://kcpmahallub.onrender.com'
 const baseURLlocal = 'http://localhost:8000'
 export const axiosInstance = axios.create({
-    baseURL: baseURLlocal,
+    baseURL: baseURLProd,
     withCredentials: true,
     headers: {
         "Content-Type": 'Application/json',
